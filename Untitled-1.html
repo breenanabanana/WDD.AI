@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summer CAM WDD Using AI</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .banner {
+      background-color: silver;
+      text-align: center;
+      padding: 20px;
+    }
+    main div {
+      border-bottom: 1px solid #000;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+  </style>
+  <script src="data.js"></script>
+</head>
+<body>
+  <div class="banner">
+    <h1>Summer CAM WDD Using AI</h1>
+  </div>
+
+  <main>
+    <!-- 20 div elements with unique IDs -->
+    <div id="div1">
+        <h2>Section 1. What is a convolutional neural network?</h2>
+        <ul>
+          <li>It tries to find an edge or pattern in an image</li>
+          <li>It usually consists of one or more convolution plus pooling layer, and one fully connected (FC) layer</li>
+          <li>When doing convolution on an image, we use a 5x5 filter. Further, we may apply several such filters to detect edge/pattern along several lines</li>
+          <li>The cost function will be</li>
+          <li>The last layer is output lay where we use a so-called Sigmoid activation, so that several outputs can be used.
+            <br>
+            <img src="https://www.backupspirit.com/camp/AI/convolutionExample3.jpg" alt="Convolution Example" style="width: 600px; height: 300px;">        </ul>
+    </div>
+
+    <div id="div2">
+      <h2>Section 2. Load TensorFlow for Java Script libraries </h2>
+      <p>We will use TensorFlow.js to train the model.</p>
+      <p>Click the 'Run' button below to import two JavaScript libraries.</p>
+      <p> import https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js for defining and training models.</p>
+      <p> import https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js for web browser visualization.</p> 
+
+      <button onclick="loadLibraries()">Run</button>
+    </div>
+
+    <div id="div3">Output:  </div>
+
+
+    <div id="div4">
+      <h2>Section 3. The dataset of images</h2>
+      <p>We will use a dataset from Google, https://storage.googleapis.com/learnjs-data/model-builder/mnist_images.png, 
+         and their labels, https://storage.googleapis.com/learnjs-data/model-builder/mnist_labels_uint8"</p>. 
+      <p>The dataset is a big image file. It contains 65,000 images, each of size 28 x 28 x 1. The label file contains 65,000 labels. 
+         Each image use 10 numbers to indicate which digit the image represent.”</p>
+
+
+    </div>
+
+    <div id="div5">
+      <h2>Section 4. The JavaScript module to process the dataset</h2>
+      <p> We will use a JavaScript class from ‘./data.js’ to process the dataset. Please download
+        <a href="data.js">data.js</a> and save it to the same folder where your model is.
+      </p>
+      
+      <button onclick="loadDataset()">Load the dataset</button>
+    </div>
+
+    <div id="div6">Output: </div>
+
+    <div id="div7">
+      <h2>Section 5 We will show 20 images from the dataset</h2>
+      <button id="showImagesButton">Show the first 20 images</button>
+
+    </div>
+
+
+    <div id="div8">
+      <h2>Section 6. Define a CNN.</h2>
+      <p>Our CNN has input of shape 28 x 28 x 1.</p>
+      <p>The first layer is a convolution + pooling. We will use 8 filters, each filter has kernel size=5 x 5 and stride =1. The activation function is ‘relu’. We use the max pooling of size 2 x 2 with stride=[2,2].</p>
+      <p>The second layer is also a convolution + pooling. This time, we use 16 filters each of kernel size=5x5 and stride =1. The activation function is also ‘relu’. We use the max pooling of size 2 x 2 with stride=[2,2].</p>
+      <p>The third layer is a fully connected layer with shape * x 1.</p>
+      <p>The last layer is the output layer, with 10 outputs representing 10 digits. The activation function is now ‘softmax’.</p>
+      <button onclick="defineModel()">Define the model</button>
+    </div>
+
+
+
+
+    <div id="div9">Output: </div>
+
+    <div id="div10">
+      <h2>Section 7. Train the model using 5000 images</h2>
+      <p>The batch size = 512, and epochs = 10</p>
+      <p>The test size = 1000</p>
+      <p>The callbacks have name='Model Training', tab='Model', styles='{height: 1000px}', metrics={'loss', 'val_loss', 'acc', 'val_acc'}</p>
+      <button onclick="trainModel()">Train the model</button>
+    </div>
+
+
+
+    <div id="div11">Output: </div>
+
+
+    <div id="div12">
+      <h2>Evaluate the model</h2>
+      <p>We will obtain 500 images from the dataset mnistData.</p>
+      <p>We use the trained model to calculate the predictions and then compare the predictions with the provided labels.</p>
+      <p>We then draw a confusion matrix to show for each digit, how many images are labeled for that digit and how many images that predicted to that digit. Further, how many differences.</p>
+      <!-- You can add the confusion matrix visualization here -->
+
+<!--      <button onclick="showConfusionMatrix()">Show a confusion matrix</button>
+-->
+      <button onclick="showConfusion(globalModel, mnistData)">Show the confusion matrix</button>
+    </div>
+    <div id="div13">Output: </div>
+
+
+
+   
+  </main>
+
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+
+  <script>
+    function loadLibraries() {
+      var script1 = document.createElement('script');
+      script1.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js';
+      document.body.appendChild(script1);
+
+      var script2 = document.createElement('script');
+      script2.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js';
+      document.body.appendChild(script2);
+
+      console.log('Libraries loaded successfully.');
+      document.getElementById('div3').innerText += ' Libraries loaded successfully.';
+    }
+  </script>
+  
+  <script>
+    let mnistData;
+    async function loadDataset() {
+      try {
+        mnistData = new MnistData();
+        await mnistData.load();
+        displayDatasetShape(mnistData);
+
+
+        //console.log('Dataset and labels loaded successfully');
+      } catch (error) {
+        console.error('Error loading dataset and labels:', error);
+      }
+    }
+    function displayDatasetShape(data) {
+      const images = data.trainImages;
+      const labels = data.trainLabels;
+      const imagesShape = images.length;
+      const labelsShape = labels.length;
+      document.getElementById('div6').innerText = `Images shape: ${imagesShape}, Labels shape: ${labelsShape}`; 
+    }
+   
+  </script>
+
+  <script>
+      document.getElementById('showImagesButton').addEventListener('click', function() {
+         showFirst20Images(mnistData);
+      });
+
+ 
+    /*
+    async function showFirst20Images(data) {
+      const surface = tfvis.visor().surface({ name: 'First 20 Images' });
+      const batchSize = 20;
+      //const [images, labels] = data.nextBatch(batchSize);
+
+      const images = data.nextTestBatch(batchSize);
+      for (let i = 0; i < batchSize; i++) {
+        const imageTensor = tf.tidy(() => {
+          return images.xs.slice([i, 0], [1, images.xs.shape[1]]).reshape([28, 28, 1]);
+        });
+       // const label = labels[i];
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 28;
+        canvas.height = 28;
+        canvas.style = 'margin: 4px;';
+        const imageElement = await tf.browser.toPixels(imageTensor, canvas);
+       // tfvis.render.image(surface, {tensor: imageElement, labels: [label]});
+
+       surface.drawArea.appendChild(canvas);
+
+       imageTensor.dispose();
+      }
+    }
+    */
+
+    async function showFirst20Images(mnistData) {
+  
+      const examples = mnistData.nextTestBatch(20); // Obtain 20 images from mnistData
+      const surfaceElement = document.getElementById('div7'); // Get the surface element by its ID
+
+      const images = examples.xs;
+      for (let i = 0; i < 20; i++) {
+        const imageTensor = images.slice([i, 0], [1, 784]).reshape([28,28,1]); // Extract the image tensor
+        // const imageDataArray = imageTensor.reshape([28,28,1]); // Convert the tensor to a regular array
+
+        const imageElement = document.createElement('canvas'); // Create a canvas element
+        imageElement.width = 28;
+        imageElement.height = 28;
+        const ctx = imageElement.getContext('2d');
+        const imageData = ctx.createImageData(28, 28); // Create an ImageData object
+
+        await tf.browser.toPixels(imageTensor, imageElement);
+        //for (let j = 0; j < imageDataArray.length; j++) {
+        //  imageData.data[j] = imageDataArray[j]; // Set the pixel data for the image
+        //}
+
+        // ctx.putImageData(imageData, 0, 0); // Draw the image data onto the canvas
+
+        surfaceElement.appendChild(imageElement); // Add the canvas element to the surface
+  
+        const label=examples.labels.slice([i,0], [1, 10]);
+        const labelDiv = document.createElement('div');
+        labelDiv.textContent = `Label: ${label}`;
+        surfaceElement.appendChild(labelDiv);
+  }
+}
+
+    
+  </script>
+  
+
+  <script>
+    let globalModel; // Define a global variable to store the model
+
+    async function defineModel() {
+      const model = tf.sequential();
+      model.add(tf.layers.conv2d({
+        inputShape: [28, 28, 1],
+        filters: 8,
+        kernelSize: 5,
+        strides: 1,
+        activation: 'relu',
+        kernelInitializer: 'varianceScaling'
+      }));
+      model.add(tf.layers.maxPooling2d({poolSize: [2, 2], strides: [2, 2]}));
+      model.add(tf.layers.conv2d({
+        filters: 16,
+        kernelSize: 5,
+        strides: 1,
+        activation: 'relu',
+        kernelInitializer: 'varianceScaling'
+      }));
+      model.add(tf.layers.maxPooling2d({poolSize: [2, 2], strides: [2, 2]}));
+      model.add(tf.layers.flatten());
+      model.add(tf.layers.dense({
+        units: 10,
+        kernelInitializer: 'varianceScaling',
+        activation: 'softmax'
+      }));
+
+
+      const optimizer = 'adam';
+      const loss = 'categoricalCrossentropy';
+      const metrics = ['accuracy'];
+
+      model.compile({
+        optimizer: optimizer,
+        loss: loss,
+        metrics: metrics
+      });
+
+
+      await model.build();
+      const summaryElement = document.getElementById('div9');
+      //const tfvis = require('@tensorflow/tfjs-vis');
+      tfvis.show.modelSummary(summaryElement, model);
+
+      globalModel =  model
+  }
+
+
+  </script>
+
+
+
+<script>
+   /*
+  async function trainModel() {
+   
+    const numTrainExamples = 5000;
+    const numTestExamples = 1000;
+
+    const trainExamples = mnistData.nextTrainBatch(numTrainExamples);
+    const testExamples  = mnistData.nextTestBatch(numTestExamples);
+
+    const xTrain = trainExamples.xs.reshape([numTrainExamples, 28, 28, 1]);
+    const yTrain = trainExamples.labels;
+    const xTest  = testExamples.xs.reshape([numTestExamples, 28, 28,1]);
+    const yTest  = testExamples.labels;
+
+    const optimizer = 'adam';
+    const loss = 'categoricalCrossentropy';
+    const metrics = ['loss', 'val_loss', 'acc', 'val_acc'];
+
+    const metric = ['accuracy'];
+
+      globalModel.compile({
+        optimizer: optimizer,
+        loss: loss,
+        metrics: metric
+      });
+
+    await globalModel.fit(xTrain, yTrain, {
+      batchSize: 512,
+      epochs: 10,
+      validationData: [xTest, yTest],
+      callbacks: tfvis.show.fitCallbacks(
+        { name: 'Model Training', tab: 'Model', styles: { height: 1000 } },
+        metrics
+      )
+    });
+  }
+*/
+
+
+
+  async function trainModel() {
+    // Compile the globalModel
+    globalModel.compile({
+      optimizer: 'adam',
+    loss: 'categoricalCrossentropy',
+    metrics: ['accuracy']
+  });
+
+  // Obtain a batch of 5000 training examples
+  const trainData = mnistData.nextTrainBatch(5000);
+  const trainImages = trainData.xs.reshape([5000, 28, 28, 1]);
+  const trainLabels = trainData.labels;
+
+  // Obtain a batch of 1000 testing examples
+  const testData = mnistData.nextTestBatch(1000);
+  const testImages = testData.xs.reshape([1000, 28, 28, 1]);
+  const testLabels = testData.labels;
+
+
+//  const fitCallbacks = tfvis.show.fitCallbacks(document.getElementById('div11'), 
+//     ['loss', 'acc'],
+//      {height: 400});
+
+  // Train the model
+  const history = await globalModel.fit(trainImages, trainLabels, {
+    batchSize: 512,
+    epochs: 10,
+    validationData: [testImages, testLabels],
+
+    callbacks: tfvis.show.fitCallbacks(
+      document.getElementById('div11'),
+      //{ name: 'Model Training', tab: 'Model' },
+      ['loss', 'acc'],
+      { height: 400 }
+    )
+    
+    //callbacks: fitCallbacks
+  });
+
+
+    // Display the training history
+    //tfvis.show.history(document.getElementById('div11'), history);
+
+}
+</script>
+
+<script>
+  /*
+  async function showConfusionMatrix() {
+    const numExamples = 500;
+    const examples = mnistData.nextTestBatch(numExamples);
+    const xTest = examples.xs.reshape([numExamples, 28, 28, 1]);
+    const yTest = examples.labels.argMax(-1);
+
+    const predictions = globalModel.predict(xTest).argMax(-1);
+
+    const perClassAccuracy = tfvis.metrics.perClassAccuracy(yTest, predictions);
+    const confusionMatrix = tfvis.metrics.confusionMatrix(yTest, predictions);
+
+    const confusionMatrixContainer = document.getElementById('confusionMatrixVisualization');
+    await tfvis.render.confusionMatrix(confusionMatrixContainer, { values: confusionMatrix, tickLabels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] });
+  }
+  */
+</script>
+
+<script>
+
+const classNames = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+
+function doPrediction(model, data, testDataSize = 500) {
+  const IMAGE_WIDTH = 28;
+  const IMAGE_HEIGHT = 28;
+  const testData = data.nextTestBatch(testDataSize);
+  const testxs = testData.xs.reshape([testDataSize, IMAGE_WIDTH, IMAGE_HEIGHT, 1]);
+  const labels = testData.labels.argMax(-1);
+  const preds = model.predict(testxs).argMax(-1);
+
+  testxs.dispose();
+  return [preds, labels];
+}
+
+/*
+async function showAccuracy1(model, data) {
+  const [preds, labels] = doPrediction(model, data);
+  const classAccuracy = await tfvis.metrics.perClassAccuracy(labels, preds);
+  const container = {name: 'Accuracy', tab: 'Evaluation'};
+  tfvis.show.perClassAccuracy(container, classAccuracy, classNames);
+
+  labels.dispose();
+}
+
+async function showConfusion1(model, data) {
+  const [preds, labels] = doPrediction(model, data);
+  const confusionMatrix = await tfvis.metrics.confusionMatrix(labels, preds);
+  const container = {name: 'Confusion Matrix', tab: 'Evaluation'};
+  tfvis.render.confusionMatrix(container, {values: confusionMatrix, tickLabels: classNames});
+
+  labels.dispose();
+}
+
+async function showAccuracy(model, data) {
+  const [preds, labels] = doPrediction(model, data);
+  const classAccuracy = await tfvis.metrics.perClassAccuracy(labels, preds);
+  const container = {name: 'Accuracy', tab: 'Evaluation'};
+  tfvis.show.perClassAccuracy(container, classAccuracy, classNames);
+
+  labels.dispose()
+}
+*/
+
+async function showConfusion(model, data) {
+  const [preds, labels] = doPrediction(model, data);
+  const confusionMatrix = await tfvis.metrics.confusionMatrix(labels, preds);
+  //const container = {name: 'Confusion Matrix', tab: 'Evaluation'};
+  const container = document.getElementById('div13');
+  tfvis.render.confusionMatrix(container, {values: confusionMatrix, tickLabels: classNames});
+
+  labels.dispose();
+}
+
+
+
+</script>
+
+
+</body>
+</html>
